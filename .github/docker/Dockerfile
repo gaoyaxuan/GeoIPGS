@@ -8,7 +8,6 @@ RUN GOOS=$TARGETOS GOARCH=$TARGETARCH CGO_ENABLED=0 go build -a -o GeoIPGS  ./ma
 FROM --platform=${TARGETPLATFORM} alpine:latest
 WORKDIR /app
 COPY --from=build /src/GeoIPGS /app/GeoIPGS
-COPY --from=build /src/GeoLite2-City.mmdb  /app/GeoLite2-City.mmdb
 RUN set -ex \
     && chmod 544 /app/GeoIPGS
 
