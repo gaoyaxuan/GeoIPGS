@@ -10,9 +10,9 @@
 docker-compose up -d 
 请求方式:
 
-curl http://localhost:8080/8.8.8.8
+curl http://localhost:8080/141.132.14.151
 
-curl http://localhost:8080?ip=8.8.8.8
+curl http://localhost:8080?ip=141.132.14.151
 
 结果返回:
 
