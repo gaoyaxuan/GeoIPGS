@@ -8,7 +8,8 @@ RUN GOOS=$TARGETOS GOARCH=$TARGETARCH CGO_ENABLED=0 go build -a -o GeoIPGS  ./ma
 FROM --platform=${TARGETPLATFORM} alpine:latest
 WORKDIR /app
 COPY --from=build /src/GeoIPGS /app/GeoIPGS
-RUN set -ex \
+RUN apk --no-cache --no-progress add tzdata \
+    && set -ex \
     && chmod 544 /app/GeoIPGS
 
 
