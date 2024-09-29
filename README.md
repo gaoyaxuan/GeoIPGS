@@ -10,6 +10,8 @@
 docker-compose up -d 
 请求方式:
 
+所有api均支持get和post请求
+
 curl http://localhost:8080/141.132.14.151
 
 curl http://localhost:8080?ip=141.132.14.151
