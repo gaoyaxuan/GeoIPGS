@@ -53,7 +53,6 @@ func getIPInfo(ip net.IP, language string) (IPInfo, error) {
 	if err != nil {
 		return IPInfo{}, err
 	}
-
 	ipInfo := IPInfo{
 		Code:    SUCCESS,
 		IP:      ip.String(),
@@ -90,6 +89,9 @@ func ipHandler(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusOK, Response{Code: ERROR, Message: "Request failed"})
 		return
+	}
+	if query.Ip == "" {
+		query.Ip = c.ClientIP()
 	}
 	handleIP(query.Ip, c)
 }
