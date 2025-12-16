@@ -162,7 +162,7 @@ func main() {
 	r.POST("/", ipHandler)
 	r.GET("/:ip", ipPathHandler)
 	r.POST("/:ip", ipPathHandler)
-	err = r.Run("0.0.0.0:8080")
+	err = r.Run(":8080")
 	if err != nil {
 		log.Fatalf("--------服务启动失败: %v--------\n", err)
 		return

@@ -9,6 +9,10 @@ services:
       - ./GeoLite2-City.mmdb:/app/GeoLite2-City.mmdb
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    # 容器文件系统只读
+    read_only: true
+    cap_drop:
+      - ALL
     ports:
       # 默认映射到8080端口
       - "8080:8080"
