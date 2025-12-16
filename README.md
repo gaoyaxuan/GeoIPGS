@@ -3,6 +3,8 @@
 需要自行下载GeoIP,命名为:GeoLite2-City.mmdb,映射到容器内/app/GeoLite2-City.mmdb
 
 [GeoIP文件下载教程](http://www.modsecurity.cn/practice/post/15.html)
+
+[ip-to-city-lite文件下载教程](https://db-ip.com/db/download/ip-to-city-lite)
 ## 运行教程
 ```
 

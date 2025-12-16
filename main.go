@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/oschwald/geoip2-golang"
 	"log"
 	"net"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/oschwald/geoip2-golang"
 )
 
 var db *geoip2.Reader
@@ -48,22 +49,45 @@ func parseAcceptLanguage(al string) string {
 	return defaultLanguage
 }
 
+func getSafeName(names map[string]string, lang string) string {
+	if names == nil {
+		return ""
+	}
+	// 1. 尝试获取请求的语言
+	if val, ok := names[lang]; ok && val != "" {
+		return val
+	}
+	// 2. 尝试获取通用中文 (GeoLite2 有时只有 zh-CN 没有 zh)
+	if val, ok := names["zh-CN"]; ok && val != "" {
+		return val
+	}
+	// 3. 回退到英文 (兜底，总比返回空好)
+	if val, ok := names["en"]; ok && val != "" {
+		return val
+	}
+	return ""
+}
 func getIPInfo(ip net.IP, language string) (IPInfo, error) {
 	record, err := db.City(ip)
 	if err != nil {
 		return IPInfo{}, err
 	}
+	// 针对 GeoLite2 的语言处理优化
+	// Accept-Language 解析出来可能是 "zh", 但库里 key 是 "zh-CN"
+	targetLang := language
+	if strings.HasPrefix(language, "zh") {
+		targetLang = "zh-CN"
+	}
 	ipInfo := IPInfo{
-		Code:    SUCCESS,
-		IP:      ip.String(),
-		Country: record.Country.Names[language],
-		City:    record.City.Names[language],
+		Code: SUCCESS,
+		IP:   ip.String(),
+		// 使用辅助函数取值
+		Country: getSafeName(record.Country.Names, targetLang),
+		City:    getSafeName(record.City.Names, targetLang),
 	}
-
 	if len(record.Subdivisions) > 0 {
-		ipInfo.Region = record.Subdivisions[0].Names[language]
+		ipInfo.Region = getSafeName(record.Subdivisions[0].Names, targetLang)
 	}
-
 	return ipInfo, nil
 }
 
